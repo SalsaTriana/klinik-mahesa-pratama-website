@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLINIK PRATAMA MAHESA MEDICAL CENTER</title>
+    <!-- Memuat Tailwind CSS untuk styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Memuat Font Awesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Menggunakan Google Font Inter -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+    <style>
+        /* Variabel CSS untuk skema warna hijau utama klinik */
+        :root {
+            --primary-green: #4CAF50; /* Warna hijau utama dari PDF */
+            --dark-green: #2E8B57; /* Warna hijau yang lebih gelap untuk aksen dan footer */
+            --light-green: #D4EDDA; /* Warna hijau muda untuk latar belakang section */
+            --accent-green: #2E8B57; /* Warna hijau yang sama untuk aksen */
+        }
+
+        /* Gaya dasar untuk body dan font */
+        body {
+            font-family: 'Inter', sans-serif; /* Menggunakan font Inter */
+            background-color: #FFFFFF; /* Latar belakang putih bersih */
+            color: #333; /* Warna teks gelap */
+            font-size: 1.125rem; /* Ukuran font dasar yang lebih besar */
+        }
+
+        /* Kelas utilitas Tailwind kustom untuk warna */
+        .bg-primary-green { background-color: var(--primary-green); }
+        .hover-bg-dark-green:hover { background-color: var(--dark-green); }
+        .text-dark-green { color: var(--dark-green); }
+        .bg-light-green { background-color: var(--light-green); }
+        .bg-accent-green { background-color: var(--accent-green); }
+
+        /* Gaya untuk scrollbar yang lebih halus */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--light-green); }
+        ::-webkit-scrollbar-thumb { background: var(--dark-green); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-green); }
+        
+        /* Animasi untuk hero section */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        /* Gaya khusus untuk judul hero section */
+        /* Menambahkan bayangan teks halus saat di-hover */
+        .hero-title-hover:hover {
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+            transition: text-shadow 0.3s ease-in-out;
+        }
+        
+        /* Gaya untuk modal kustom */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content-artikel {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 2.5rem; /* Padding lebih besar */
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 900px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-content-pesan {
+            background-color: #fff;
+            padding: 2.5rem; /* Padding lebih besar */
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 450px;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .modal-close:hover,
+        .modal-close:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-content-artikel img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header / Navbar -->
+    <header class="bg-primary-green shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2 text-white text-2xl font-bold">
+                <i class="fas fa-heartbeat text-white"></i>
+                <span>KLINIK PRATAMA MAHESA MEDICAL CENTER</span>
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#beranda" class="text-white hover:text-gray-200 font-medium transition-colors">Beranda</a>
+                <a href="#tentang-kami" class="text-white hover:text-gray-200 font-medium transition-colors">Tentang Kami</a>
+                <a href="#artikel" class="text-white hover:text-gray-200 font-medium transition-colors">Artikel</a>
+                <a href="#dokter" class="text-white hover:text-gray-200 font-medium transition-colors">Dokter</a>
+                <a href="#kontak" class="text-white hover:text-gray-200 font-medium transition-colors">Kontak</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden text-white text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+        <!-- Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primary-green shadow-md">
+            <div class="flex flex-col items-center py-4 space-y-2">
+                <a href="#beranda" class="text-white hover:text-gray-200 font-medium transition-colors w-full text-center py-2">Beranda</a>
+                <a href="#tentang-kami" class="text-white hover:text-gray-200 font-medium transition-colors w-full text-center py-2">Tentang Kami</a>
+                <a href="#artikel" class="text-white hover:text-gray-200 font-medium transition-colors w-full text-center py-2">Artikel</a>
+                <a href="#dokter" class="text-white hover:text-gray-200 font-medium transition-colors w-full text-center py-2">Dokter</a>
+                <a href="#kontak" class="text-white hover:text-gray-200 font-medium transition-colors w-full text-center py-2">Kontak</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Bagian Beranda / Hero Section dengan Background Gambar -->
+        <section id="beranda" class="relative text-white py-24 md:py-40 flex items-center justify-center bg-cover bg-center" style="background-image: url('WhatsApp\ Image\ 2025-08-01\ at\ 15.36.26_6abea53c.jpg');">
+            <!-- Overlay untuk meningkatkan kontras teks -->
+            <div class="absolute inset-0 bg-black opacity-20"></div>
+            <!-- Konten Beranda -->
+            <div class="container mx-auto text-center px-4 animate-fadeIn relative z-10">
+                <!-- Judul utama sekarang berwarna putih dan memiliki efek bayangan saat di-hover -->
+                <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6 text-white hero-title-hover cursor-pointer">
+                    KLINIK PRATAMA<br>MAHESA MEDICAL CENTER
+                </h1>
+                <p class="text-lg md:text-xl font-light max-w-3xl mx-auto mb-10 italic">
+                    Pusat layanan kesehatan yang didukung oleh tenaga medis profesional dengan sarana penunjang medis yang mengutamakan pelayanan terlengkap dan terbaik bagi masyarakat.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#artikel" class="bg-white text-dark-green px-10 py-4 rounded-full font-bold shadow-lg hover:shadow-xl transition-all">Baca Artikel Terbaru</a>
+                    <a href="#kontak" class="bg-transparent border-2 border-white text-white px-10 py-4 rounded-full font-bold hover:bg-white hover:text-dark-green transition-colors">Hubungi Kami</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Tentang Kami (Gambar di bawah teks dan diperbesar) -->
+        <section id="tentang-kami" class="py-20 bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-4xl font-bold text-center text-dark-green mb-14">Tentang Klinik Kami</h2>
+                
+                <!-- Kontainer teks dengan lebar terbatas dan di tengah -->
+                <div class="max-w-3xl mx-auto mb-12">
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        KLINIK PRATAMA MAHESA MEDICAL CENTER hadir sebagai media edukasi dan informasi kesehatan untuk masyarakat. Kami percaya bahwa pengetahuan adalah langkah awal menuju hidup yang lebih sehat.
+                    </p>
+                    <p class="text-gray-700 leading-relaxed">
+                        Artikel-artikel yang kami sajikan ditulis oleh tim medis profesional, mencakup berbagai topik mulai dari pencegahan penyakit, tips gaya hidup sehat, hingga pemahaman tentang kondisi medis umum.
+                    </p>
+                </div>
+
+                <!-- Kontainer gambar yang diperbesar dan di tengah -->
+                <div class="max-w-4xl mx-auto">
+                    <!-- Menggunakan gambar yang diunggah dengan lebar penuh dalam kontainer -->
+                    <img src="—Pngtree—illustration of a medical team_10523719.png" alt="Foto tim klinik yang profesional" class="rounded-xl shadow-lg w-full">
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Artikel Terbaru -->
+        <section id="artikel" class="py-20 bg-light-green">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-dark-green mb-14">Artikel Terbaru</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Kartu Artikel 1 -->
+                    <div class="bg-white p-10 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+                        <div class="text-6xl text-dark-green mb-4">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Manfaat Rutin Pemeriksaan Kesehatan (Medical Check-Up)</h3>
+                        <p class="text-gray-600">Mempelajari pentingnya pemeriksaan rutin untuk deteksi dini dan pencegahan penyakit.</p>
+                        <button class="mt-6 inline-block text-dark-green hover:underline baca-selengkapnya" data-artikel-id="0">Baca Selengkapnya</button>
+                    </div>
+                    <!-- Kartu Artikel 2 -->
+                    <div class="bg-white p-10 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+                        <div class="text-6xl text-dark-green mb-4">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Tips Menjaga Imunitas Tubuh di Musim Pancaroba</h3>
+                        <p class="text-gray-600">Panduan praktis untuk memperkuat sistem kekebalan tubuh agar tetap fit.</p>
+                        <button class="mt-6 inline-block text-dark-green hover:underline baca-selengkapnya" data-artikel-id="1">Baca Selengkapnya</button>
+                    </div>
+                    <!-- Kartu Artikel 3 -->
+                    <div class="bg-white p-10 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+                        <div class="text-6xl text-dark-green mb-4">
+                            <i class="fas fa-apple-alt"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Pentingnya Nutrisi Seimbang untuk Perkembangan Anak</h3>
+                        <p class="text-gray-600">Panduan lengkap mengenai asupan gizi yang ideal untuk tumbuh kembang anak.</p>
+                        <button class="mt-6 inline-block text-dark-green hover:underline baca-selengkapnya" data-artikel-id="2">Baca Selengkapnya</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Bagian Layanan Klinik (Diperbarui dengan daftar yang diminta) -->
+        <section id="layanan" class="py-20 bg-white">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-dark-green mb-14">Layanan yang Kami Tawarkan</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Kartu Layanan 1 -->
+                    <div class="bg-light-green p-10 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+                        <div class="text-6xl text-dark-green mb-4">
+                            <i class="fas fa-address-card"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Melayani BPJS Kesehatan</h3>
+                        <p class="text-gray-700">Kami menerima pasien dengan fasilitas BPJS Kesehatan.</p>
+                    </div>
+                    <!-- Kartu Layanan 2 -->
+                    <div class="bg-light-green p-10 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+                        <div class="text-6xl text-dark-green mb-4">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Poli Umum</h3>
+                        <p class="text-gray-700">Pelayanan pemeriksaan kesehatan dasar dan konsultasi oleh dokter umum.</p>
+                    </div>
+                    <!-- Kartu Layanan 3 -->
+                    <div class="bg-light-green p-10 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+                        <div class="text-6xl text-dark-green mb-4">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Poli Prolanis</h3>
+                        <p class="text-gray-700">Program pengelolaan penyakit kronis (Prolanis) untuk pasien diabetes dan hipertensi.</p>
+                    </div>
+                    <!-- Kartu Layanan 4 -->
+                    <div class="bg-light-green p-10 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+                        <div class="text-6xl text-dark-green mb-4">
+                            <i class="fas fa-tooth"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Poli Gigi</h3>
+                        <p class="text-gray-700">Pelayanan kesehatan gigi dan mulut yang komprehensif.</p>
+                    </div>
+                    <!-- Kartu Layanan 5 -->
+                    <div class="bg-light-green p-10 rounded-xl shadow-md text-center hover:shadow-lg transition-shadow">
+                        <div class="text-6xl text-dark-green mb-4">
+                            <i class="fas fa-baby"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-3">Poli KIA (USG)</h3>
+                        <p class="text-gray-700">Pelayanan kesehatan ibu dan anak, termasuk pemeriksaan USG.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Doctors -->
+        <section id="dokter" class="py-20 bg-light-green">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-dark-green mb-14">Dokter Kami dan Jadwal Praktik</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10">
+                    <!-- Kartu Dokter 1 (Dokter Umum) -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition-shadow">
+                        <img src="—Pngtree—female doctor medical stethoscope_6245387.png" alt="Foto Dr. Ina Aulia" class="w-full h-48 object-cover">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold mb-2">Dr. Ina Aulia</h3>
+                            <p class="text-dark-green font-medium">Dokter Umum</p>
+                            <p class="text-sm text-gray-600 mt-2"><b>Jam Praktik:</b> Senin-Jumat, 09.00 - 15.00</p>
+                        </div>
+                    </div>
+                    <!-- Kartu Dokter 2 (Dokter Gigi) -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition-shadow">
+                        <img src="—Pngtree—female doctor medical stethoscope_6245387.png" alt="Foto drg. Nurul Yanuar" class="w-full h-48 object-cover">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold mb-2">Drg. Nurul Yanuar</h3>
+                            <p class="text-dark-green font-medium">Dokter Gigi</p>
+                            <p class="text-sm text-gray-600 mt-2"><b>Jam Praktik:</b> Senin, Rabu, Jumat, 14.00 - 18.00</p>
+                        </div>
+                    </div>
+                    <!-- Kartu Dokter 3 (Spesialis Bedah) -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition-shadow">
+                        <img src="—Pngtree—cartoon doctor png medical worker_4450935.png" alt="Foto Dr. Tito Apriana Sp.B" class="w-full h-48 object-cover">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold mb-2">Dr. Tito Apriana Sp.B</h3>
+                            <p class="text-dark-green font-medium">Spesialis Bedah</p>
+                            <p class="text-sm text-gray-600 mt-2"><b>Jam Praktik:</b> Selasa & Kamis, 16.00 - 20.00</p>
+                        </div>
+                    </div>
+                    <!-- Kartu Dokter 4 (Spesialis Mata) -->
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden text-center hover:shadow-lg transition-shadow">
+                        <img src="—Pngtree—cartoon doctor png medical worker_4450935.png" alt="Foto Dr. Widjayanti Oesman Sp,Mata" class="w-full h-48 object-cover">
+                        <div class="p-8">
+                            <h3 class="text-2xl font-semibold mb-2">Dr. Widjayanti Oesman Sp.Mata</h3>
+                            <p class="text-dark-green font-medium">Spesialis Mata</p>
+                            <p class="text-sm text-gray-600 mt-2"><b>Jam Praktik:</b> Sabtu, 10.00 - 14.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Antrian -->
+        <section id="antrian" class="py-20 bg-white">
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-4xl font-bold text-center text-dark-green mb-8">Ambil Nomor Antrian</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto mb-10">
+                    Tekan tombol di bawah untuk mendapatkan nomor antrian Anda saat berkunjung ke klinik. Nomor antrian akan disimpan di browser Anda.
+                </p>
+                <div class="max-w-md mx-auto bg-light-green p-10 rounded-xl shadow-lg">
+                    <div class="mb-8">
+                        <p class="text-xl text-dark-green font-semibold">Nomor Antrian Saat Ini:</p>
+                        <span id="queueNumberDisplay" class="text-7xl font-extrabold text-dark-green">0</span>
+                    </div>
+                    <button id="getQueueNumberButton" class="bg-dark-green text-white px-10 py-5 rounded-full font-bold shadow-md hover-bg-dark-green transition-colors w-full text-lg">
+                        Ambil Nomor Antrian
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bagian Kontak -->
+        <section id="kontak" class="py-20 bg-light-green">
+            <div class="container mx-auto px-4">
+                <h2 class="text-4xl font-bold text-center text-dark-green mb-14">Hubungi Kami</h2>
+                <div class="flex flex-col md:flex-row md:space-x-12">
+                    <!-- Formulir Kontak -->
+                    <div class="md:w-1/2 bg-white p-10 rounded-xl shadow-lg mb-8 md:mb-0">
+                        <h3 class="text-2xl font-semibold text-dark-green mb-8">Formulir Kontak</h3>
+                        <form id="contactForm">
+                            <div class="mb-6">
+                                <label for="name" class="block text-gray-700 font-medium mb-2">Nama Lengkap</label>
+                                <input type="text" id="name" name="name" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-green" required>
+                            </div>
+                            <div class="mb-6">
+                                <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-green" required>
+                            </div>
+                            <!-- Bidang input baru untuk Nomor BPJS -->
+                            <div class="mb-6">
+                                <label for="bpjs" class="block text-gray-700 font-medium mb-2">Nomor BPJS</label>
+                                <input type="text" id="bpjs" name="bpjs" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-green">
+                            </div>
+                            <div class="mb-6">
+                                <label for="message" class="block text-gray-700 font-medium mb-2">Pesan</label>
+                                <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-green" required></textarea>
+                            </div>
+                            <button type="submit" class="bg-dark-green text-white px-8 py-4 rounded-full font-bold hover-bg-dark-green transition-colors w-full text-lg">Kirim Pesan</button>
+                        </form>
+                    </div>
+
+                    <!-- Informasi Kontak -->
+                    <div class="md:w-1/2">
+                        <div class="bg-white p-10 rounded-xl shadow-lg h-full">
+                            <h3 class="text-2xl font-semibold text-dark-green mb-8">Informasi Kontak</h3>
+                            <ul class="space-y-5 text-gray-700">
+                                <!-- Tautan ke Google Maps telah diubah untuk menunjuk ke koordinat GPS langsung -->
+                                <li class="flex items-center space-x-3">
+                                    <i class="fas fa-map-marker-alt text-dark-green text-2xl"></i>
+                                    <a href="https://www.google.com/maps?q=-7.202359,107.924647" target="_blank" class="hover:underline text-gray-700">
+                                        <span>Jl. Cimanuk No.10, Sukagalih, Kec. Tarogong Kidul, Kabupaten Garut, Jawa Barat 44151</span>
+                                    </a>
+                                </li>
+                                <!-- Tautan WhatsApp baru ditambahkan -->
+                                <li class="flex items-center space-x-3">
+                                    <i class="fab fa-whatsapp text-dark-green text-2xl"></i>
+                                    <a href="https://wa.me/+6282262324040" target="_blank" class="hover:underline">+62 822-6232-4040</a>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i class="fas fa-phone-alt text-dark-green text-2xl"></i>
+                                    <a href="tel:+62262233238" class="hover:underline">(0262) 233238</a>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i class="fas fa-envelope text-dark-green text-2xl"></i>
+                                    <a href="mailto:mahesaklinik@email.com" class="hover:underline">mahesaklinik@email.com</a>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <i class="fab fa-instagram text-dark-green text-2xl"></i>
+                                    <a href="https://www.instagram.com/klinikpratamamahesa/" target="_blank" class="hover:underline">@klinikpratamamahesa</a>
+                                </li>
+                            </ul>
+                            <!-- Peta Google Maps yang disematkan telah diperbarui untuk menunjuk ke koordinat GPS langsung -->
+                            <div class="mt-8 h-80 bg-gray-200 rounded-lg overflow-hidden">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.070002120015!2d107.92464731477488!3d-7.20235909477002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e663a78d06b6b79%3A0x6b2e1b1d3d6e5c5d!2sKlinik%20Pratama%20Mahesa%20Medical%20Center!5e0!3m2!1sid!2sid!4v1628172812000!5m2!1sid!2sid"
+                                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-green text-white py-10">
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 KLINIK PRATAMA MAHESA MEDICAL CENTER. Semua Hak Dilindungi.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Kustom untuk Pesan -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content-pesan">
+            <span class="modal-close-pesan">&times;</span>
+            <h3 id="modalTitlePesan" class="text-2xl font-bold text-dark-green mb-4"></h3>
+            <p id="modalMessagePesan" class="text-gray-700"></p>
+        </div>
+    </div>
+    
+    <!-- Modal Kustom untuk Artikel -->
+    <div id="articleModal" class="modal">
+        <div class="modal-content-artikel">
+            <span class="modal-close-artikel">&times;</span>
+            <div id="articleContent" class="prose max-w-none">
+                <!-- Konten artikel akan dimasukkan di sini oleh JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Logika untuk Navbar Mobile ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('#mobile-menu a');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // --- Logika untuk Sistem Antrian & Modal Pesan ---
+            const getQueueNumberButton = document.getElementById('getQueueNumberButton');
+            const queueNumberDisplay = document.getElementById('queueNumberDisplay');
+            const queueLocalStorageKey = 'klinikQueueNumber';
+            let currentQueueNumber = 0;
+
+            const showMessage = (title, message) => {
+                const modal = document.getElementById('messageModal');
+                const modalTitle = document.getElementById('modalTitlePesan');
+                const modalMessage = document.getElementById('modalMessagePesan');
+                const modalCloseBtn = document.querySelector('.modal-close-pesan');
+
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                modal.style.display = 'flex';
+
+                modalCloseBtn.onclick = () => {
+                    modal.style.display = 'none';
+                };
+
+                window.onclick = (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                };
+            };
+
+            const loadQueueNumber = () => {
+                const storedNumber = localStorage.getItem(queueLocalStorageKey);
+                if (storedNumber) {
+                    currentQueueNumber = parseInt(storedNumber);
+                    queueNumberDisplay.textContent = currentQueueNumber;
+                } else {
+                    currentQueueNumber = 0;
+                    queueNumberDisplay.textContent = currentQueueNumber;
+                }
+            };
+
+            const saveQueueNumber = () => {
+                localStorage.setItem(queueLocalStorageKey, currentQueueNumber);
+                console.log('Nomor antrian disimpan ke localStorage:', currentQueueNumber);
+            };
+
+            if (getQueueNumberButton && queueNumberDisplay) {
+                loadQueueNumber();
+
+                getQueueNumberButton.addEventListener('click', () => {
+                    currentQueueNumber++;
+                    queueNumberDisplay.textContent = currentQueueNumber;
+                    saveQueueNumber();
+                    showMessage('Nomor Antrian Anda', `Nomor antrian Anda adalah: ${currentQueueNumber}.`);
+                });
+            }
+
+            // --- Logika untuk Artikel dan Modal Artikel ---
+            const articles = [
+                {
+                    title: "Manfaat Rutin Pemeriksaan Kesehatan (Medical Check-Up)",
+                    image: "https://placehold.co/800x400/D4EDDA/2E8B57?text=Pemeriksaan+Kesehatan",
+                    content: `
+                        <p>Pemeriksaan kesehatan rutin, atau yang lebih dikenal dengan <i>medical check-up</i>, adalah langkah proaktif yang sangat penting untuk menjaga kesehatan. Banyak penyakit serius, seperti hipertensi dan diabetes, seringkali tidak menunjukkan gejala di tahap awal. Dengan melakukan pemeriksaan rutin, Anda bisa mendeteksi kondisi tersebut lebih dini, sehingga penanganan bisa dilakukan secepat mungkin.</p>
+                        <p>Beberapa manfaat utama dari <i>medical check-up</i> rutin meliputi:</p>
+                        <ul class="list-disc list-inside">
+                            <li><b>Deteksi Dini Penyakit:</b> Mengidentifikasi risiko penyakit sebelum berkembang menjadi kondisi yang lebih parah.</li>
+                            <li><b>Pencegahan Penyakit:</b> Menerima saran medis yang dipersonalisasi untuk mencegah penyakit, seperti perubahan gaya hidup atau diet.</li>
+                            <li><b>Pemantauan Kesehatan:</b> Memungkinkan Anda untuk melacak parameter kesehatan penting dari waktu ke waktu, seperti tekanan darah, kadar kolesterol, dan gula darah.</li>
+                            <li><b>Penyesuaian Gaya Hidup:</b> Memberikan informasi yang diperlukan untuk membuat keputusan yang lebih baik tentang kebiasaan makan dan rutinitas olahraga Anda.</li>
+                            <li><b>Investasi Jangka Panjang:</b> Dengan menjaga kesehatan melalui pemeriksaan rutin, Anda berinvestasi untuk kualitas hidup yang lebih baik di masa depan.</li>
+                        </ul>
+                        <p>Jangan tunggu hingga sakit untuk memeriksakan diri. Lakukan <i>medical check-up</i> secara berkala untuk investasi jangka panjang bagi kesehatan Anda.</p>
+                    `
+                },
+                {
+                    title: "Tips Menjaga Imunitas Tubuh di Musim Pancaroba",
+                    image: "https://placehold.co/800x400/D4EDDA/2E8B57?text=Menjaga+Imunitas",
+                    content: `
+                        <p>Musim pancaroba seringkali membawa perubahan suhu dan cuaca yang tidak menentu, membuat tubuh lebih rentan terhadap penyakit seperti flu, batuk, dan demam. Menjaga sistem kekebalan tubuh tetap kuat adalah kunci untuk melewati musim ini dengan sehat.</p>
+                        <p>Berikut adalah beberapa tips sederhana yang efektif untuk menjaga imunitas:</p>
+                        <ul class="list-disc list-inside">
+                            <li><b>Konsumsi Makanan Bergizi:</b> Perbanyak asupan buah-buahan, sayuran, dan protein. Vitamin C, Vitamin D, dan Zinc sangat penting untuk fungsi kekebalan tubuh.</li>
+                            <li><b>Cukupi Kebutuhan Tidur:</b> Pastikan Anda tidur 7-8 jam setiap malam. Kurang tidur dapat melemahkan sistem imun.</li>
+                            <li><b>Hidrasi yang Cukup:</b> Minum air putih yang cukup sepanjang hari untuk menjaga selaput lendir tetap lembab, yang berfungsi sebagai pertahanan alami tubuh.</li>
+                            <li><b>Rutin Berolahraga:</b> Olahraga ringan hingga sedang dapat meningkatkan sirkulasi dan memperkuat respons imun.</li>
+                            <li><b>Kelola Stres:</b> Stres kronis dapat menekan sistem kekebalan. Lakukan aktivitas relaksasi seperti yoga atau meditasi.</li>
+                        </ul>
+                        <p>Dengan menerapkan tips ini, Anda dapat membantu tubuh Anda melawan infeksi dan tetap bugar selama musim pancaroba.</p>
+                    `
+                },
+                {
+                    title: "Pentingnya Nutrisi Seimbang untuk Perkembangan Anak",
+                    image: "https://placehold.co/800x400/D4EDDA/2E8B57?text=Nutrisi+Anak",
+                    content: `
+                        <p>Nutrisi yang seimbang memainkan peran krusial dalam pertumbuhan dan perkembangan anak. Asupan makanan yang tepat tidak hanya memengaruhi kesehatan fisik, tetapi juga perkembangan kognitif dan emosional mereka. </p>
+                        <p>Berikut adalah alasan mengapa nutrisi seimbang sangat penting bagi anak:</p>
+                        <ul class="list-disc list-inside">
+                            <li><b>Pertumbuhan Fisik Optimal:</b> Kalsium, protein, dan zat besi adalah nutrisi esensial untuk pembentukan tulang, otot, dan sel darah merah yang sehat.</li>
+                            <li><b>Kecerdasan dan Fungsi Otak:</b> Nutrisi seperti DHA, Omega-3, dan zat besi mendukung perkembangan otak, meningkatkan daya ingat dan konsentrasi.</li>
+                            <li><b>Sistem Kekebalan Tubuh Kuat:</b> Vitamin C, Vitamin A, dan Zinc membantu memperkuat sistem imun anak, melindungi mereka dari penyakit.</li>
+                            <li><b>Energi untuk Aktivitas:</b> Karbohidrat kompleks dan lemak sehat menyediakan energi yang dibutuhkan anak untuk bermain dan belajar sepanjang hari.</li>
+                        </ul>
+                        <p>Pastikan anak Anda mendapatkan beragam makanan dari semua kelompok nutrisi untuk mendukung mereka tumbuh sehat dan cerdas.</p>
+                    `
+                }
+            ];
+
+            const articleButtons = document.querySelectorAll('.baca-selengkapnya');
+            const articleModal = document.getElementById('articleModal');
+            const articleContent = document.getElementById('articleContent');
+            const articleModalCloseBtn = document.querySelector('.modal-close-artikel');
+
+            articleButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const articleId = parseInt(event.target.getAttribute('data-artikel-id'));
+                    const article = articles[articleId];
+
+                    if (article) {
+                        const contentHtml = `
+                            <h2 class="text-3xl font-bold text-dark-green mb-4">${article.title}</h2>
+                            <img src="${article.image}" alt="${article.title}" class="w-full mb-6">
+                            ${article.content}
+                        `;
+                        articleContent.innerHTML = contentHtml;
+                        articleModal.style.display = 'flex';
+                    }
+                });
+            });
+
+            articleModalCloseBtn.onclick = () => {
+                articleModal.style.display = 'none';
+            };
+
+            window.onclick = (event) => {
+                if (event.target === articleModal) {
+                    modal.style.display = 'none';
+                }
+                if (event.target === messageModal) {
+                    messageModal.style.display = 'none';
+                }
+            };
+        });
+    </script>
+</body>
+</html>
